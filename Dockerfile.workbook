@@ -1,0 +1,16 @@
+FROM ubuntu:14.04
+
+RUN adduser alice && adduser bob
+
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y openssh-server libpam-krb5 krb5-user
+
+RUN mkdir /var/run/sshd && \
+    echo 'root:root' | chpasswd && \
+    sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+COPY krb5.conf /etc/
+COPY kdc.conf /etc/krb5kdc/
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D"]

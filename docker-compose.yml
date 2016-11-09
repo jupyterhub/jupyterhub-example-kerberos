@@ -1,0 +1,25 @@
+---
+version: "2"
+
+services:
+  kdc:
+    build:
+      context: .
+      dockerfile: Dockerfile.kdc
+    hostname: kdc
+    domainname: local
+    ports:
+      - "2200:22"
+
+  workbook:
+    build:
+      context: .
+      dockerfile: Dockerfile.workbook
+    links:
+      - kdc
+    hostname: workbook
+    domainname: local
+    ports:
+      - "2201:22"
+    depends_on:
+      - kdc
