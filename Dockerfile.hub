@@ -5,7 +5,6 @@ RUN adduser alice --gecos --disabled-password && \
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
-        openssh-server \
         libpam-krb5 \
         krb5-user \
         wget \
@@ -24,18 +23,12 @@ RUN /opt/conda/bin/conda install --yes -c conda-forge \
     jupyterhub && \
     /opt/conda/bin/conda clean -tipsy
 
-#RUN mkdir /var/run/sshd && \
-#    echo 'root:root' | chpasswd && \
-#    sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
 COPY krb5.conf /etc/
 COPY kdc.conf /etc/krb5kdc/
 
-RUN mkdir -p /opt/jupyterhub && \
-    chown alice:alice /opt/jupyterhub
+RUN mkdir -p /opt/jupyterhub
 
 EXPOSE 22 8000
 WORKDIR /opt/jupyterhub
-USER alice
-#CMD ["/usr/sbin/sshd", "-D"]
+
 CMD ["bash", "-c", "source /opt/conda/bin/activate /opt/conda && jupyterhub --ip 0.0.0.0 --no-ssl"]

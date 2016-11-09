@@ -12,12 +12,9 @@ COPY krb5.conf /etc/
 COPY kdc.conf /etc/krb5kdc/
 COPY kdc.sh /
 
-# Create the master key and admin principal
+# Create the master key
 RUN kdb5_util -P 'masterkey' -r KDC.LOCAL create -s
-#RUN kadmin.local -q "addprinc -pw admin admin/admin"
-#RUN echo "*/admin@KDC.LOCAL *" > /etc/krb5kdc/kadm5.acl
-
-# Create some sample principals
+# Create principals for the workbook users
 RUN kadmin.local -q "addprinc -pw alice alice"
 RUN kadmin.local -q "addprinc -pw bob bob"
 
