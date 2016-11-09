@@ -8,8 +8,6 @@ services:
       dockerfile: Dockerfile.kdc
     hostname: kdc
     domainname: local
-    ports:
-      - "2200:22"
 
   workbook:
     build:
@@ -21,5 +19,6 @@ services:
     domainname: local
     ports:
       - "2201:22"
+      - "8000:8000"
     depends_on:
       - kdc

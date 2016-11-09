@@ -1,16 +1,41 @@
 FROM ubuntu:14.04
 
-RUN adduser alice && adduser bob
+RUN adduser alice --gecos --disabled-password && \
+    adduser bob --gecos --disabled-password
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y openssh-server libpam-krb5 krb5-user
+    apt-get install --no-install-recommends -y \
+        openssh-server \
+        libpam-krb5 \
+        krb5-user \
+        wget \
+        bzip2 \
+        ca-certificates
 
-RUN mkdir /var/run/sshd && \
-    echo 'root:root' | chpasswd && \
-    sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN wget -q https://repo.continuum.io/miniconda/Miniconda3-4.2.12-Linux-x86_64.sh -O /tmp/miniconda.sh  && \
+    echo 'd0c7c71cc5659e54ab51f2005a8d96f3 */tmp/miniconda.sh' | md5sum -c - && \
+    bash /tmp/miniconda.sh -f -b -p /opt/conda && \
+    rm /tmp/miniconda.sh
+
+RUN /opt/conda/bin/conda install --yes -c conda-forge \
+    python=3.5 \
+    configurable-http-proxy \
+    notebook \
+    jupyterhub && \
+    /opt/conda/bin/conda clean -tipsy
+
+#RUN mkdir /var/run/sshd && \
+#    echo 'root:root' | chpasswd && \
+#    sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 COPY krb5.conf /etc/
 COPY kdc.conf /etc/krb5kdc/
 
-EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
+RUN mkdir -p /opt/jupyterhub && \
+    chown alice:alice /opt/jupyterhub
+
+EXPOSE 22 8000
+WORKDIR /opt/jupyterhub
+USER alice
+#CMD ["/usr/sbin/sshd", "-D"]
+CMD ["bash", "-c", "source /opt/conda/bin/activate /opt/conda && jupyterhub --ip 0.0.0.0 --no-ssl"]
