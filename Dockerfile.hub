@@ -1,7 +1,9 @@
 FROM ubuntu:14.04
 
+# Create local user accounts
 RUN adduser alice --gecos --disabled-password && \
-    adduser bob --gecos --disabled-password
+    adduser bob --gecos --disabled-password && \
+    adduser jupyter --gecos --disabled-password
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \
@@ -11,6 +13,7 @@ RUN apt-get update && \
         bzip2 \
         ca-certificates
 
+# Install miniconda to get jupyterhub
 RUN wget -q https://repo.continuum.io/miniconda/Miniconda3-4.2.12-Linux-x86_64.sh -O /tmp/miniconda.sh  && \
     echo 'd0c7c71cc5659e54ab51f2005a8d96f3 */tmp/miniconda.sh' | md5sum -c - && \
     bash /tmp/miniconda.sh -f -b -p /opt/conda && \
@@ -20,15 +23,22 @@ RUN /opt/conda/bin/conda install --yes -c conda-forge \
     python=3.5 \
     configurable-http-proxy \
     notebook \
-    jupyterhub && \
+    jupyterhub \
+    sudospawner && \
     /opt/conda/bin/conda clean -tipsy
 
+# Configure kerberos
 COPY krb5.conf /etc/
 COPY kdc.conf /etc/krb5kdc/
 
-RUN mkdir -p /opt/jupyterhub
+# Add the jupyterhub config
+RUN mkdir -p /opt/jupyterhub && \
+    chown jupyter:jupyter /opt/jupyterhub && \
+    echo 'jupyter ALL=(ALL:ALL) NOPASSWD:/opt/conda/bin/sudospawner' > /etc/sudoers
+COPY jupyterhub_config.py /opt/jupyterhub/
 
-EXPOSE 22 8000
+# Configure to launch jupyterhub as the jupyter user
+EXPOSE 8000
 WORKDIR /opt/jupyterhub
-
-CMD ["bash", "-c", "source /opt/conda/bin/activate /opt/conda && jupyterhub --ip 0.0.0.0 --no-ssl"]
+USER jupyter
+CMD ["bash", "-c", "source /opt/conda/bin/activate /opt/conda && jupyterhub -f jupyterhub_config.py --no-ssl"]

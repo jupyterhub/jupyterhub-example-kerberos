@@ -12,7 +12,7 @@ services:
   workbook:
     build:
       context: .
-      dockerfile: Dockerfile.workbook
+      dockerfile: Dockerfile.hub
     links:
       - kdc
     hostname: workbook
