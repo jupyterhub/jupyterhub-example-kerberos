@@ -8,8 +8,8 @@ At the moment, it is very much a work in progress. If you have experience config
 
 ## Goals
 
-* [ ] Two local users (principals), `alice` and `bob` can successfully log into JupyterHub when it is configured with PAM backed by Kerberos.
-* [ ] The two users automatically receive a Kerberos ticket granting ticket (TGT) upon Hub login.
+* [x] Two local users (principals), `alice` and `bob` can successfully log into JupyterHub when it is configured with PAM backed by Kerberos.
+* [x] The two users automatically receive a Kerberos ticket granting ticket (TGT) upon Hub login.
 * [ ] The on-disk credential cache (ccache) for each user is read-write accessible by the owner alone and without additional user action.
 * [ ] The users can refresh the TGT with the `kinit` command.
 * [ ] The users can request a ticket for a service princpal named `service` using the `kvno` command.
@@ -18,7 +18,7 @@ At the moment, it is very much a work in progress. If you have experience config
 * [ ] The above works with the following spawners:
     * [ ] default spawner
     * [ ] sudospawner
-    * [ ] (your contribution welcome!)
+    * [ ] your contribution welcome!
 
 ## Running
 
