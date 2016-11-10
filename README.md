@@ -19,3 +19,13 @@ At the moment, it is very much a work in progress. If you have experience config
     * [ ] default spawner
     * [ ] sudospawner
     * [ ] (your contribution welcome!)
+
+## Running
+
+To start a KDC container and a separate JupyterHub container with the default spawner configured:
+
+TODO
+
+To start the KDC and JupyterHub with the sudospawner configured:
+
+TODO
