@@ -37,7 +37,9 @@ COPY kdc.conf /etc/krb5kdc/
 
 # PAM_KRB5CCNAME is not set when opening the session for some reason and so we have to
 # explicitly retain the cache created during auth instead.
-RUN sed -i 's$1000$1000 ccache=/tmp/krb5cc_%u retain_after_close$' /etc/pam.d/common-auth
+# Also, turn on pam debug logging
+RUN sed -i 's$1000$1000 ccache=/tmp/krb5cc_%u retain_after_close debug$' /etc/pam.d/common-auth
+RUN sed -i 's$1000$1000 debug$' /etc/pam.d/common-session
 
 # Setup for the sudospawner case
 RUN mkdir -p /opt/jupyterhub && \
@@ -46,10 +48,11 @@ RUN mkdir -p /opt/jupyterhub && \
 
 # Add the jupyterhub config
 COPY jupyterhub_config.py /opt/jupyterhub/
+COPY hub.sh /opt/jupyterhub/
 
 # Configure to launch jupyterhub as the jupyter user in the sudospawner case
 # USER jupyter
 
 EXPOSE 8000
 WORKDIR /opt/jupyterhub
-CMD ["bash", "-c", "source /opt/conda/bin/activate /opt/conda && jupyterhub -f jupyterhub_config.py --no-ssl"]
+CMD ["./hub.sh"]
