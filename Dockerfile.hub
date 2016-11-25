@@ -50,9 +50,6 @@ RUN mkdir -p /opt/jupyterhub && \
 COPY jupyterhub_config.py /opt/jupyterhub/
 COPY hub.sh /opt/jupyterhub/
 
-# Configure to launch jupyterhub as the jupyter user in the sudospawner case
-# USER jupyter
-
 EXPOSE 8000
 WORKDIR /opt/jupyterhub
 CMD ["./hub.sh"]

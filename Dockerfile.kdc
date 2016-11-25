@@ -14,7 +14,7 @@ COPY kdc.sh /
 
 # Create the master key
 RUN kdb5_util -P 'masterkey' -r KDC.LOCAL create -s
-# Create principals for the workbook users
+# Create principals for the notebook users
 RUN kadmin.local -q "addprinc -pw alice alice"
 RUN kadmin.local -q "addprinc -pw bob bob"
 

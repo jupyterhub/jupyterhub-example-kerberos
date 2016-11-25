@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.kdc
-    hostname: kdc
-    domainname: local
 
   hub:
     build:
@@ -15,10 +13,21 @@ services:
       dockerfile: Dockerfile.hub
     links:
       - kdc
-    hostname: workbook
-    domainname: local
     ports:
-      - "2201:22"
       - "8000:8000"
     depends_on:
       - kdc
+
+  hubsudo:
+    build:
+      context: .
+      dockerfile: Dockerfile.hub
+    links:
+      - kdc
+    ports:
+      - "8001:8000"
+    depends_on:
+      - kdc
+    user: jupyter
+    command:
+      ./hub.sh --JupyterHub.spawner_class='sudospawner.SudoSpawner' --SudoSpawner.sudospawner_path='/opt/conda/bin/sudospawner'

@@ -13,7 +13,3 @@ c.JupyterHub.port = 8000
 # design for auth and spawn.
 c.PAMAuthenticator.open_sessions = False
 
-# TODO: for the sudospawner setup later
-#c.JupyterHub.spawner_class = 'sudospawner.SudoSpawner'
-#c.SudoSpawner.sudospawner_path = "/opt/conda/bin/sudospawner"
-#c.SudoSpawner.sudo_args = ['-nH']
