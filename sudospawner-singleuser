@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+source /opt/conda/bin/activate /opt/conda
+# Use pamela to do authentication again, this time after sudoing to the desired notebook
+# server user so that the kerberos cred cache is created and the chown is a no-op.
+python -c "import pamela
+import getpass
+import os
+pamela.authenticate(getpass.getuser(), os.getenv('KERBEROS_PASSWORD'), resetcred=0x0002)"
+# Clear the kerberos password that we set in the environment in our custom spawner so that
+# its not visible to the notebook server and kernels.
+unset KERBEROS_PASSWORD
+# Delegate launch to the notebook server.
+exec "$(dirname "$0")/jupyterhub-singleuser" $@

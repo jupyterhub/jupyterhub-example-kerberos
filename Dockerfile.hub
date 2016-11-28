@@ -45,7 +45,11 @@ RUN mkdir -p /opt/jupyterhub && \
 
 # Add the jupyterhub config
 COPY jupyterhub_config.py /opt/jupyterhub/
+COPY jupyterhub_sudo_config.py /opt/jupyterhub/
 COPY hub.sh /opt/jupyterhub/
+
+# Add custom sudospawner script
+COPY sudospawner-singleuser /opt/conda/bin/
 
 EXPOSE 8000
 WORKDIR /opt/jupyterhub

@@ -30,4 +30,4 @@ services:
       - kdc
     user: jupyter
     command:
-      ./hub.sh --JupyterHub.spawner_class='sudospawner.SudoSpawner' --SudoSpawner.sudospawner_path='/opt/conda/bin/sudospawner'
+      ./hub.sh --config=jupyterhub_sudo_config.py
