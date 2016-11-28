@@ -13,3 +13,29 @@ c.JupyterHub.port = 8000
 # design for auth and spawn.
 c.PAMAuthenticator.open_sessions = False
 
+from jupyterhub.auth import PAMAuthenticator
+import pamela
+from tornado import gen
+
+class KerberosPAMAuthenticator(PAMAuthenticator):
+    @gen.coroutine
+    def authenticate(self, handler, data):
+        """Authenticate with PAM, and return the username if login is successful.
+
+        Return None otherwise.
+
+        Establish credentials when authenticating instead of reinitializing them
+        so that a Kerberos cred cache has the proper UID in it.
+        """
+        username = data['username']
+        try:
+            pamela.authenticate(username, data['password'], service=self.service, resetcred=pamela.PAM_ESTABLISH_CRED)
+        except pamela.PAMError as e:
+            if handler is not None:
+                self.log.warning("PAM Authentication failed (%s@%s): %s", username, handler.request.remote_ip, e)
+            else:
+                self.log.warning("PAM Authentication failed: %s", e)
+        else:
+            return username
+
+c.JupyterHub.authenticator_class = KerberosPAMAuthenticator

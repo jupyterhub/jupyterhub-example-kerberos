@@ -24,12 +24,9 @@ RUN /opt/conda/bin/conda install --yes -c conda-forge \
     configurable-http-proxy \
     notebook \
     jupyterhub \
+    'pamela>=0.3' \
     sudospawner && \
     /opt/conda/bin/conda clean -tipsy
-
-# Install pamela with setcred fix
-RUN apt-get install -y --no-install-recommends git
-RUN /opt/conda/bin/pip install 'git+https://github.com/parente/pamela@fix-setcred-behavior'
 
 # Configure kerberos
 COPY krb5.conf /etc/
