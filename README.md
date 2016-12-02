@@ -47,7 +47,7 @@ Generate a keytab by running the following commands, substituting `alice` with
 `bob` if you logged into JupyterHub with that user instead.
 
 ```bash
-kutil
+ktutil
 addent -password -p alice@KDC.LOCAL -k 1 -e rc4-hmac
 wkt /home/alice/.keytab
 ```
