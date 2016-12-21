@@ -23,9 +23,9 @@ configuring JupyterHub with Kerberos, please jump in and help us out!
   any terminal or Python notebook.
 * [x] All other JupyterHub functions behave as expected: starting notebook
   servers, stopping notebook servers, logging out, admin functions, etc.
-* [ ] The above works with the following spawners:
+* [x] The above works with the following spawners:
     * [x] default spawner
-    * [ ] sudospawner
+    * [x] sudospawner
     * [ ] your contribution welcome!
 
 ## Running
@@ -43,8 +43,8 @@ Click New &rarr; Terminal to start a terminal session. View the ticket granting
 ticket received during login by running `klist`. Renew the TGT by running
 `kinit -R`.
 
-Generate a keytab by running the following commands, substituting `alice` with
-`bob` if you logged into JupyterHub with that user instead.
+Generate a keytab by running the following commands, substituting `bob` for
+`alice` if you logged into JupyterHub with that user instead.
 
 ```bash
 ktutil
