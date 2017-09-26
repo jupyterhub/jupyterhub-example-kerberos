@@ -21,11 +21,12 @@ RUN wget -q https://repo.continuum.io/miniconda/Miniconda3-4.2.12-Linux-x86_64.s
 
 RUN /opt/conda/bin/conda install --yes -c conda-forge \
     python=3.5 \
-    configurable-http-proxy \
-    notebook \
-    jupyterhub \
+    configurable-http-proxy=3.0.0 \
+    notebook=5.1.0 \
+    idna=2.5 \
+    jupyterhub=0.7.2 \
     'pamela>=0.3' \
-    sudospawner && \
+    sudospawner=0.4.1 && \
     /opt/conda/bin/conda clean -tipsy
 
 # Configure kerberos
